@@ -7,6 +7,8 @@
 
 using GameFramework;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 /// <summary>
@@ -193,5 +195,49 @@ public static class BinaryExtension
         Utility.Encryption.GetSelfXorBytes(s_CachedBytes, encryptBytes);
         binaryWriter.Write((byte)length);
         binaryWriter.Write(s_CachedBytes, 0, length);
+    }
+
+    //扩展
+    public static Array ReadArray(this BinaryReader binaryReader)
+    {
+        string str = binaryReader.ReadString();
+        string[] splitedValue = str.Split('|');
+        Array array = Array.CreateInstance(typeof(int), splitedValue.Length);
+        for (int i = 0; i < splitedValue.Length; i++)
+        {
+            array.SetValue(i, int.Parse(splitedValue[i]));
+        }
+        return array;
+    }
+
+    public static ArrayList ReadArrayList(this BinaryReader binaryReader)
+    {
+        string str = binaryReader.ReadString();
+        string[] splitedValue = str.Split('|');
+        ArrayList array = new ArrayList();
+        foreach (var item in splitedValue)
+        {
+            array.Add(item);
+        }
+        return array;
+    }
+
+    public static List<int> ReadListInt(this BinaryReader binaryReader)
+    {
+        string str = binaryReader.ReadString();
+        string[] splitedValue = str.Split(';');
+        List<int> arr = new List<int>();
+        foreach (var item in splitedValue)
+        {
+            arr.Add(int.Parse(item));
+        }
+        return arr;
+    }
+
+    public static List<string> ReadListString(this BinaryReader binaryReader)
+    {
+        string str = binaryReader.ReadString();
+        string[] splitedValue = str.Split(';');
+        return new List<string>(splitedValue);
     }
 }
