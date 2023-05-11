@@ -69,6 +69,36 @@ namespace UnityGameFramework.Editor.DataTableTools
             }
         }
 
+        public static void GenerateUIFormEnumFile(DataTableProcessor dataTableProcessor, string dataTableName)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("//this file is generate by tools,do not alter it...")
+                .AppendLine("namespace FindDiff")
+                .AppendLine("{")
+                .AppendLine($"\t// {dataTableProcessor.GetValue(3, 1)}")
+                .AppendLine("\tpublic enum UIFormId : byte")
+                .AppendLine("\t{");
+            
+            for (int i = 4; i < dataTableProcessor.RawRowCount; i++)
+            {
+                stringBuilder.AppendLine($"\t\t// {dataTableProcessor.GetValue(i, 2)}")
+                    .AppendLine($"\t\t{dataTableProcessor.GetValue(i, 3)} = {dataTableProcessor.GetValue(i, 1)},");
+            }
+            stringBuilder.AppendLine("\t}")
+                .AppendLine("}");
+            
+            string outputFileName = Utility.Path.GetRegularPath(Path.Combine(CSharpCodePath, dataTableName + "Id.cs"));
+            using (FileStream fileStream = new FileStream(outputFileName, FileMode.Create, FileAccess.Write))
+            {
+                using (StreamWriter stream = new StreamWriter(fileStream, Encoding.UTF8))
+                {
+                    stream.Write(stringBuilder.ToString());
+                }
+            }
+
+            Debug.Log(Utility.Text.Format("Generate code file '{0}' success.", outputFileName));
+        }
+        
         private static void DataTableCodeGenerator(DataTableProcessor dataTableProcessor, StringBuilder codeContent, object userData)
         {
             string dataTableName = (string)userData;

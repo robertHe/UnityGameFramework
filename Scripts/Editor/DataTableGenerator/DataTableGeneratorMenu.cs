@@ -68,6 +68,10 @@ namespace UnityGameFramework.Editor.DataTableTools
 
             DataTableGenerator.GenerateDataFile(dataTableProcessor, dataTableName);
             DataTableGenerator.GenerateCodeFile(dataTableProcessor, dataTableName);
+            if (dataTableName == "UIForm")
+            {
+                DataTableGenerator.GenerateUIFormEnumFile(dataTableProcessor, dataTableName);
+            }
         }
     }
 }
